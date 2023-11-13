@@ -1,6 +1,5 @@
 import 'package:fans_list/data/data.dart';
 import 'package:fans_list/providers/providers.dart';
-import 'package:fans_list/services/services.dart';
 import 'package:fans_list/utils/theme_helper.dart';
 import 'package:fans_list/widgets/widgets.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +15,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final controller = TextEditingController();
   final focusNode = FocusNode();
 
   @override
@@ -109,23 +107,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       );
                     },
                   )
-                : Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "There's nothing here yet",
-                        style: ThemeStyles.black17,
-                      ),
-                      SizedBox(height: 32.h),
-                      GestureDetector(
-                        onTap: () => context.go('/add_new'),
-                        child: Text(
-                          'Add contact',
-                          style: ThemeStyles.blue15W6,
-                        ),
-                      ),
-                    ],
-                  ),
+                : const NoContacts(),
           ),
         ],
       );

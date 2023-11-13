@@ -28,10 +28,11 @@ class _NewContactScreenState extends State<NewContactScreen> {
   Widget build(BuildContext context) {
     final overlay = MediaQuery.of(context).padding;
     final bottomView = MediaQuery.of(context).viewInsets.bottom;
-    return Consumer<ContactProvider>(
+    return Consumer2<ContactProvider, HomeProvider>(
       builder: (
         BuildContext context,
         ContactProvider contactProvider,
+        HomeProvider homeProvider,
         Widget? child,
       ) {
         return Column(
@@ -222,6 +223,7 @@ class _NewContactScreenState extends State<NewContactScreen> {
                       nameController.clear();
                       phoneController.clear();
                       bioController.clear();
+                      homeProvider.initState();
                       setState(() {});
                     },
                     child: Container(
@@ -249,7 +251,6 @@ class _NewContactScreenState extends State<NewContactScreen> {
 
   Future getImage() async {
     final XFile? image = await ImagePicker().pickImage(source: ImageSource.gallery);
-
     setState(() {
       imagePath = image!.path;
     });

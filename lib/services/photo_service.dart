@@ -1,7 +1,7 @@
 import 'package:fans_list/models/models.dart';
 import 'package:sqflite/sqlite_api.dart';
 
-const photoTable = 'contact_table';
+const photoTable = 'photo_table';
 
 class PhotoService {
   final Database database;

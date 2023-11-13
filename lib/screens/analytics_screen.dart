@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:fans_list/providers/providers.dart';
 import 'package:fans_list/utils/utils.dart';
 import 'package:fans_list/widgets/widgets.dart';
@@ -12,9 +14,9 @@ class AnalyticsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final overlay = MediaQuery.of(context).padding;
     return Consumer<ContactProvider>(builder: (
-    BuildContext context,
-    ContactProvider contactProvider,
-    Widget? child,
+      BuildContext context,
+      ContactProvider contactProvider,
+      Widget? child,
     ) {
       return Column(
         children: [
@@ -64,13 +66,14 @@ class AnalyticsScreen extends StatelessWidget {
                 SizedBox(height: 8.h),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
+                  children: List.generate(
+                    contactProvider.contactList.take(4).length,
+                    (i) => Column(
                       children: [
                         ClipRRect(
                           borderRadius: BorderRadius.circular(200.r),
-                          child: Image.asset(
-                            'assets/images/Photos.png',
+                          child: Image.file(
+                            File(contactProvider.contactList[i].image),
                             width: 56.w,
                             height: 56.h,
                             fit: BoxFit.cover,
@@ -78,66 +81,12 @@ class AnalyticsScreen extends StatelessWidget {
                         ),
                         SizedBox(height: 6.h),
                         Text(
-                          'Marion',
+                          contactProvider.contactList[i].name.split(' ')[0],
                           style: ThemeStyles.black12,
                         ),
                       ],
                     ),
-                    Column(
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(200.r),
-                          child: Image.asset(
-                            'assets/images/Photos.png',
-                            width: 56.w,
-                            height: 56.h,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                        SizedBox(height: 6.h),
-                        Text(
-                          'Marion',
-                          style: ThemeStyles.black12,
-                        ),
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(200.r),
-                          child: Image.asset(
-                            'assets/images/Photos.png',
-                            width: 56.w,
-                            height: 56.h,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                        SizedBox(height: 6.h),
-                        Text(
-                          'Marion',
-                          style: ThemeStyles.black12,
-                        ),
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(200.r),
-                          child: Image.asset(
-                            'assets/images/Photos.png',
-                            width: 56.w,
-                            height: 56.h,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                        SizedBox(height: 6.h),
-                        Text(
-                          'Marion',
-                          style: ThemeStyles.black12,
-                        ),
-                      ],
-                    ),
-                  ],
+                  ),
                 ),
               ],
             ),
@@ -172,7 +121,7 @@ class AnalyticsScreen extends StatelessWidget {
           SizedBox(height: 8.h),
           Expanded(
             child: ListView.builder(
-              itemCount: 3,
+              itemCount: contactProvider.contactList.take(5).length,
               padding: EdgeInsets.all(16.sp),
               itemBuilder: (context, i) {
                 return Contact(
@@ -185,7 +134,6 @@ class AnalyticsScreen extends StatelessWidget {
           ),
         ],
       );
-    }
-    );
+    });
   }
 }

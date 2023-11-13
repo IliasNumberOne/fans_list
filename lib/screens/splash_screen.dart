@@ -3,7 +3,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
 class SplashScreen extends StatefulWidget {
-  const SplashScreen({super.key});
+  const SplashScreen({
+    super.key,
+    required this.initScreen,
+  });
+
+  final bool initScreen;
 
   @override
   State<SplashScreen> createState() => _SplashScreenState();
@@ -13,8 +18,10 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
+    print('init: ${widget.initScreen}');
+    final path = widget.initScreen ? '/' : '/onboarding_screen';
     Future.delayed(const Duration(milliseconds: 800), () {
-      context.go('/onboarding_screen');
+      context.go(path);
     });
   }
 

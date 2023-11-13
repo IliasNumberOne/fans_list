@@ -9,9 +9,14 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  final preference = await SharedPreferences.getInstance();
+  final PreferenceService preferenceService = PreferenceService(preference);
+  bool initScreen = preferenceService.getIsFirstEntry();
+  await preferenceService.setIsFirstEntry();
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
     systemNavigationBarColor: Colors.transparent,
   ));
@@ -24,6 +29,7 @@ void main() async {
       builder: (context, child) {
         return FansListApp(
           sqlService: sqlService,
+          initScreen: initScreen,
         );
       },
     ),
@@ -34,9 +40,11 @@ class FansListApp extends StatefulWidget {
   const FansListApp({
     Key? key,
     required this.sqlService,
+    required this.initScreen,
   }) : super(key: key);
 
   final SqlService sqlService;
+  final bool initScreen;
 
   @override
   State<FansListApp> createState() => _FansListAppState();
@@ -49,7 +57,7 @@ class _FansListAppState extends State<FansListApp> {
   void initState() {
     super.initState();
     _router = GoRouter(
-      initialLocation: '/',
+      initialLocation: '/splash_screen',
       routes: [
         GoRoute(
           path: '/splash_screen',
@@ -57,7 +65,7 @@ class _FansListAppState extends State<FansListApp> {
             return buildPageWithDefaultTransition(
               context: context,
               state: state,
-              child: SplashScreen(),
+              child: SplashScreen(initScreen: widget.initScreen,),
             );
           },
         ),
@@ -188,11 +196,13 @@ class _FansListAppState extends State<FansListApp> {
 
   @override
   Widget build(BuildContext context) {
-    final overlay = MediaQuery.of(context).padding;
     return MultiProvider(
       providers: [
         Provider(
           create: (context) => ContactService(widget.sqlService.database),
+        ),
+        Provider(
+          create: (context) => PhotoService(widget.sqlService.database),
         ),
         ChangeNotifierProvider(
           create: (context) => ContactProvider(
@@ -202,6 +212,12 @@ class _FansListAppState extends State<FansListApp> {
         ChangeNotifierProvider(
           create: (context) => HomeProvider(
             contactService: context.read<ContactService>(),
+          )..initState(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => GalleryProvider(
+            contactService: context.read<ContactService>(),
+            photoService: context.read<PhotoService>()
           )..initState(),
         ),
       ],

@@ -48,6 +48,13 @@ class SqlService {
         category $textType
       )
     ''');
+    await db.execute('''
+      CREATE TABLE $photoTable (
+        id $idType,
+        contactId $intType,
+        photo $textType
+      )
+    ''');
   }
 
 
